@@ -4,7 +4,3 @@
 2025-09-29	21:50:15	96762c12-85f9-44b1-afd2-81ec2d3290c7	Log event emitted!
 2025-09-29	21:50:17	258870ec-3175-4e4d-8087-603a69caf926	Log event emitted again!
 2025-09-29	21:50:19	9157ca84-7d41-4c26-bf17-2227a0ce0dc3	Log event emitted one more time!
-2025-09-29	22:07:15	f1b33357-f7e3-4c7b-aad8-4355fb59d3f2	Log event emitted!
-2025-09-29	22:07:17	b67fbc70-8516-4edc-93e2-f9a10d28aff4	Log event emitted again!
-2025-09-29	22:07:19	6030ead5-6d95-468b-844d-c5e0030746a2	Log event emitted one more time!
-2025-09-29	22:07:32	e296fc86-9ae5-439c-bbb3-8799044147f0	Log event emitted!
