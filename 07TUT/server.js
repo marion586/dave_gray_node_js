@@ -2,21 +2,32 @@
 const path = require('path')
 const express = require('express')
 const app = express()
-const PORT = process.env.PORT || 3500  
+const {logger} = require('./middleware/logEvents');
+const cors = require('cors');
+const { errorHandler } = require('./middleware/errorHandler');
+
+//custom middleware logger
+
+app.use(logger)
+//Cross origin Ressource Shareing
+
+const whitelist = ['https://www.yoursite.com', 'http://127.0.0.1:5500', 'http://127.0.0.1:3500' , 'http://localhost:3500']
+const corsOptions = {
+    origin: (origin, callback) => {console.log(origin)
+        if (whitelist.indexOf(origin) !==-1 || !origin) {
+            callback(null, true)
+        }else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+    ,optionSuccessStatus: 200
+}
 
 
-//built-in middleware to handle urlencoded data
-//in other words, form data:
-//'content-type: application/x-www-form-urlencoded'
+app.use(cors(corsOptions))
 app.use(express.urlencoded({ extended: false }))//to handle form data
-
-//built-in middleware for json
-//'content-type: application/json'
 app.use(express.json()) //to handle json data
-
-//serving static files
 app.use(express.static(path.join(__dirname, 'public')))
-
 app.get(/^\/$|index(.html)?/,(req, res)=> {
     res.sendFile(path.join(__dirname, "views", "index.html"))
     //or res.sendFile('./views/index.html', {root: __dirname})
@@ -37,11 +48,10 @@ app.get(/\/hello(.html)?/,(req, res, next)=> {
 })
 
 
-
+const PORT = process.env.PORT || 3500   
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 
 
-//chaining route handlers
 const one = (req, res, next) => {
     console.log('one')
     next()
@@ -56,25 +66,18 @@ const three = (req, res, next) => {
 }
 app.get(/\/chain(.html)?/, [one, two, three])
 
-app.get(/\/*/,(req, res)=> {
-    res.status(404).sendFile(path.join(__dirname, "views", "404.html"))
+
+//app.use('/')
+app.use((req, res) => {
+    res.status(404)
+
+    if (req.accepts('html')) {
+        res.sendFile(path.join(__dirname, 'views', '404.html'))
+    } else if (req.accepts('json')) {
+        res.json({ error: '404 Not Found' })
+    } else {
+        res.type('txt').send('404 Not Found')
+    }
 })
-//type of middlware
-// built in , custom, third party
-//app.use() - for all requests
-//app.use('/subdir') - for requests to subdir
 
-//static files
-//app.use(express.static('public')) //root directory is the folder where server.js is located
-//app.use('/subdir', express.static('public')) //localhost:3500/subdir
-
-//third party middleware
-//npm i morgan
-// const morgan = require('morgan')
-// app.use(morgan('tiny'))
-
-//custom middleware
-// const logger = require('./middleware/logger')
-// const authorize = require('./middleware/authorize')
-// app.use([logger, authorize]) //applies to all routes
-// app.use('/api', authorize) //only applies to /api routes
+app.use(errorHandler)

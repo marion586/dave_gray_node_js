@@ -1,0 +1,2 @@
+2025-10-04	07:53:38	5fe9a2bb-a02d-4971-af03-3f1d6448d1fb	Error: Not allowed by CORS
+2025-10-04	07:53:38	2edf7b0b-ca54-4827-9035-4a53801a2c54	Error: Not allowed by CORS
